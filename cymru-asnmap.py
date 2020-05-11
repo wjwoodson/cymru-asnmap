@@ -44,7 +44,7 @@ def to_csv(data, filename):
     the result.
     """
     with open(filename, "wb") as csvfile:
-        csvwriter = csv.writer(csvfile, delimiter=';',
+        csvwriter = csv.writer(csvfile, delimiter='|',
                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         csvwriter.writerow(["AS", "IP", "BGP Prefix", "CC", "Registry",
@@ -93,13 +93,8 @@ def main():
         parser.add_argument("-t", "--timeout", type=int, dest="timeout",
                             default=5, help="Timeout (default is 5).")
         parser.add_argument("-o", "--output", help="Output CSV file.",
-                            dest="filename")
+                            default="output-asnmap.csv", dest="filename")
         args = parser.parse_args()
-
-        if args.filename:
-            filename = argparse.filename
-        else:
-            filename = "output-asnmap.csv"
 
         if args.from_file:
             with open(args.target, "rb") as input_file:
@@ -113,13 +108,13 @@ def main():
 
         response = query(bulk_query, args.timeout)
 
-        print response
+        print(response)
 
-        to_csv(response, filename)
-        print "Output saved to: %s" % filename
+        to_csv(response, args.filename)
+        print("Output saved to: %s" % args.filename)
 
     except Exception as e:
-        print "Unable to proceed. Error: %s" % e
+        print("Unable to proceed. Error: %s" % e)
 
 if __name__ == '__main__':
     main()
